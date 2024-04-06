@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\buku;
+use App\Models\peminjaman;
+use App\Models\koleksipribadi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\kategoribuku;
+
 
 class BukuController extends Controller
 {
@@ -14,18 +18,19 @@ class BukuController extends Controller
      * Display a listing of the resource.
      */
 
-    public function kategori (string $id) {
+    public function kategori(string $id)
+    {
         $categories = kategoribuku::where('kategoriid', $id)->get();
         $data = buku::all()->where('kategori', $id);
-        return view('tables.databuku', compact('data', 'categories'));
+        return view('admin.tables.databuku', compact('data', 'categories'));
     }
 
     public function index()
     {
-        return view('tables.databuku', [
+        return view('admin.tables.databuku', [
             'data' => buku::all(),
             'categories' => kategoribuku::all()
-        ]); 
+        ]);
     }
 
     /**
@@ -52,7 +57,7 @@ class BukuController extends Controller
             'cover' => 'required|image|mimes:jpeg,png,jpg|max:1024'
         ]);
 
-        $imageName = time().'.'.$request->cover->extension();
+        $imageName = time() . '.' . $request->cover->extension();
         $request->cover->move(public_path('asset/images/cover'), $imageName);
 
         buku::insert([
@@ -140,8 +145,8 @@ class BukuController extends Controller
     {
         $buku = buku::where('bukuid', $id)->first();
 
-        if (File::exists(public_path('asset/images/cover/'. $buku->cover))) {
-            File::delete(public_path('asset/images/cover/'. $buku->cover));
+        if (File::exists(public_path('asset/images/cover/' . $buku->cover))) {
+            File::delete(public_path('asset/images/cover/' . $buku->cover));
         };
 
         $buku->delete();
@@ -149,10 +154,35 @@ class BukuController extends Controller
         return redirect()->route('buku.index')->with('delete', 'Buku Telah Dihapus :(');
     }
 
-    public function peminjamanbuku(Request $request, string $id) {
 
+    public function peminjamanbuku(Request $request, string $id)
+    {
+
+        // Validasi data yang diterima
         $request->validate([
-            'stok'=>'required'
+            'bukuid' => 'required',
+            'judul' => 'required',
+        ]);
+
+        // Dapatkan ID User yang sedang Login
+        $userid = Auth::id();
+
+        // Periksa Apakah Pengguna Sudah Pinjam Buku Ini Sebelumnya
+        $existingPeminjam = peminjaman::where('userid', $userid)->where('bukuid', $request->bukuid)->exists();
+
+        if ($existingPeminjam) {
+            return redirect()->route('user.buku.blog')->with('gagalpinjam', 'Maaf, Kembalikan Buku Yang Sudah Anda Pinjam Terlebih Dahulu');
+        }
+
+        // Menghitung tanggal pengembalian (1 minggu setelah meminjam)
+        $tanggalPeminjaman = now();
+
+        // Menyimpan Data ke Database
+        peminjaman::insert([
+            'userid' => $userid,
+            'bukuid' => $request->bukuid,
+            'tanggalpeminjaman' => $tanggalPeminjaman,
+            'statuspeminjaman' => 'p', // Status default saat meminjam
         ]);
 
         $buku = buku::find($id);
@@ -165,7 +195,8 @@ class BukuController extends Controller
         // Kurangin stok
         $buku->stok -= $request->input('stok');
         $buku->save();
-        
-        return redirect()->route('user.buku.blog')->with('berhasilpinjam', 'Selamat Anda Berhasil Meminjam Buku ^.^');
+
+        // return response()->download($filename);
+        return redirect()->route('user.buku.blog')->with('berhasilpinjam', 'Terimakasih, buku yang ingin anda pinjam akan segera di proses, tunggu hinggal admin selesai mengurusnya ^--^');
     }
 }

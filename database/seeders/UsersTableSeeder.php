@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
             'username'=>'yuwan',
             'password'=>Hash::make('123'),
             'email'=>'yuwan@contoh.com',
-            'namalengkap'=>Str::random(10),
+            'namalengkap'=>'Yuwandri Alfarizi',
             'alamat'=>'Kp. Cikeas Udik'
         ]);
     }

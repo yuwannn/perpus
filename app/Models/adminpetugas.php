@@ -21,8 +21,11 @@ class adminpetugas extends Authenticatable
      */
     protected $guard = 'adminpetugas';
     protected $fillable = [
+        'nama',
         'username',
         'password',
+        'email',
+        'alamat'
     ];
 
     /**

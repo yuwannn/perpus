@@ -10,7 +10,8 @@
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -35,11 +36,21 @@
                         <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('user.buku.blog') }}">Blog</a></li>
                         @auth
-                            {{-- Button Trigger Modal --}}
-                            <button type="button" class="btn btn-outline-light ms-3" data-bs-toggle="modal"
-                                data-bs-target="#logoutModal">
-                                Logout
-                            </button>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownPortfolio" href="#"
+                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ Auth::user()->username }}</a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPortfolio">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('user.history.peminjaman') }}">History Peminjaman</a>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item"
+                                            data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                            Logout
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
                         @else
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" id="navbarDropdownPortfolio" href="#"
@@ -100,5 +111,3 @@
 </body>
 
 </html>
-
-

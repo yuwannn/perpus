@@ -14,7 +14,7 @@ class PetugasController extends Controller
     public function index()
     {
         $data = adminpetugas::all();
-        return view('tables.datapetugas', ['data'=>$data]);
+        return view('admin.tables.datapetugas', ['data'=>$data]);
     }
 
     /**

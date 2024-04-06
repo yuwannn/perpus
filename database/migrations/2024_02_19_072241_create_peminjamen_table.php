@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('peminjamans', function (Blueprint $table) {
+        Schema::create('peminjamen', function (Blueprint $table) {
             $table->id('peminjamanid');
             $table->integer('userid');
             $table->integer('bukuid');
-            $table->date('tanggalpeminjaman');
-            $table->date('tanggalpengembalian');
-            $table->string('statuspeminjaman');
+            $table->dateTime('tanggalpeminjaman');
+            $table->dateTime('tanggalpengembalian')->nullable();
+            $table->enum('statuspeminjaman', ['p','a','m','s'])->default('p');
             $table->timestamps();
         });
     }

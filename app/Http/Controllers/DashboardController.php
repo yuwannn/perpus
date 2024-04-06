@@ -11,6 +11,6 @@ class DashboardController extends Controller
 {
     public function admindashboard () {
         $data = adminpetugas::all();
-        return view('dashboard.admin', ['data'=>$data]);
+        return view('admin.dashboard.admin', ['data'=>$data]);
     }
 }

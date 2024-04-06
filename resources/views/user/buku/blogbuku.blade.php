@@ -108,25 +108,56 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            @foreach ($data as $item)
-                                <form action="{{ url('buku/peminjaman/' . $item->bukuid) }}" class="d-flex"
-                                    method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="d-flex mb-3">
-                                        <label for="inputQuantity" class="col-form-label mt-3 me-2">Jumlah buku
-                                            :</label>
-                                        <input type="num" class="form-control text-center me-5 mt-3"
-                                            id="inputQuantity" value="1" name="stok" style="max-width: 3rem">
-                                    </div>
-                                    <button type="submit" class="btn btn-block btn-primary my-auto"
-                                        style="max-width: 8rem; height: 3rem"><i class="bi bi-calendar3-range-fill"></i>
-                                        Pinjam
-                                    </button>
-                                </form>
-                            @endforeach
+                            <button type="submit" class="btn btn-block btn-primary my-auto"
+                                style="max-width: 8rem; height: 3rem" data-bs-target="#laporanModal{{ $item->bukuid }}"
+                                data-bs-toggle="modal"><i class="bi bi-calendar3-range-fill"></i>
+                                Pinjam
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+@endforeach
+
+@foreach ($data as $item)
+    <div class="modal fade" id="laporanModal{{ $item->bukuid }}" tabindex="-1" aria-labelledby="laporanModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Generate Laporan</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ url('/buku/peminjaman/'. $item->bukuid) }}" class="d-flex" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="mb-3">
+                                <label for="judul" class="col-form-label">Judul:</label>
+                                <input name="bukuid" type="hidden" value="{{ $item->bukuid }}">
+                                <input type="text" class="form-control" name="judul" id="judul"
+                                    value="{{ $item->judul }}">
+                            </div>
+                            <div class="modal-footer">
+                                <div class="d-flex mb-3">
+                                    <label for="inputQuantity" class="col-form-label mt-3 me-2">Jumlah buku
+                                        :</label>
+                                    <input type="num" class="form-control text-center me-5 mt-3"
+                                        id="inputQuantity" value="1" name="stok" style="max-width: 3rem">
+                                </div>
+                                <button type="submit" class="btn btn-block btn-primary my-auto"
+                                    style="max-width: 8rem; height: 3rem"><i class="bi bi-calendar3-range-fill"></i>
+                                    Pinjam
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
